@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cinema.demo.dao.OrderMapper">
+    <resultMap type="cinema.demo.entity.Order" id="OrderMap">
+        <id property="id" column="order_id" javaType="java.lang.String"/>
+        <result property="orderPosition" column="order_position" javaType="java.lang.String"/>
+        <result property="orderState" column="order_state" javaType="java.lang.Integer"/>
+        <result property="scheduleId" column="schedule_id" javaType="int"/>
+        <result property="userId" column="user_id" javaType="int"/>
+        <result property="orderPrice" column="order_price" javaType="java.lang.Integer"/>
+        <result property="orderTime" column="order_time" javaType="java.util.Date"/>
+    </resultMap>
+
+    <select id="selectOrderById" parameterType="java.lang.String" resultMap="OrderMap">
+		select * from orderinfo where order_id = #{id}
+	</select>
+
+    <select id="selectAllOrders" resultMap="OrderMap">
+		select * from orderinfo order by order_time desc
+	</select>
+
+
+    <select id="selectOrdersByScheduleId" parameterType="int" resultMap="OrderMap">
+		select * from orderinfo where schedule_id = #{scheduleId} and order_state != 2 order by order_time desc
+	</select>
+
+    <select id="selectOrdersByState" parameterType="int" resultMap="OrderMap">
+		select * from orderinfo where order_state = #{orderState} order by order_time desc
+	</select>
+
+    <select id="selectOrdersByUserName" parameterType="java.lang.String" resultMap="OrderMap">
+		select orderinfo.*  from orderinfo,user where orderinfo.user_id = user.user_id and user.user_name = #{username} order by order_time desc
+	</select>
+
+    <select id="selectRefundOrderByUserName" parameterType="java.lang.String" resultMap="OrderMap">
+		select orderinfo.*  from orderinfo,user where orderinfo.user_id = user.user_id and user.user_name = #{username} and orderinfo.order_state = 0 order by order_time desc
+	</select>
+    <insert id="insertOrder" parameterType="cinema.demo.entity.Order">
+		insert into orderinfo(order_id,order_position,schedule_id,user_id,order_price,order_time)
+		values(#{id},#{orderPosition},#{scheduleId},#{userId},#{orderPrice},#{orderTime})
+	</insert>
+
+    <update id="updateOrderStateToRefund" parameterType="java.lang.String">
+		update orderinfo set order_state = 0 where order_id = #{id}
+	</update>
+
+    <update id="updateOrderStateToRefunded" parameterType="java.lang.String">
+		update orderinfo set order_state = 2 where order_id = #{id}
+	</update>
+</mapper>

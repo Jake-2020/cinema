@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cinema.demo.dao.CinemaMapper">
+    <resultMap type="cinema.demo.entity.Cinema" id="CinemaMap">
+        <id property="id" column="cinema_id" javaType="int"/>
+        <result property="cinemaName" column="cinema_name" javaType="java.lang.String"/>
+        <result property="cinemaAddress" column="cinema_address" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="selectCinemaById" parameterType="int" resultMap="CinemaMap">
+		select * from cinema where cinema_id = #{id}
+	</select>
+
+    <select id="selectAllCinemas" resultMap="CinemaMap">
+		select * from cinema
+	</select>
+
+    <select id="selectCinemasLikeName" parameterType="cinema.demo.entity.Cinema" resultMap="CinemaMap">
+		select * from cinema where cinema_name like CONCAT('%',#{cinemaName},'%')
+	</select>
+
+    <select id="selectCinemasByName" parameterType="cinema.demo.entity.Cinema" resultMap="CinemaMap">
+		select * from cinema where cinema_name = #{cinemaName}
+	</select>
+
+    <insert id="insertCinema" parameterType="cinema.demo.entity.Cinema" keyProperty="id">
+        insert into cinema (cinema_name,cinema_address)
+        values (#{cinemaName},#{cinemaAddress})
+    </insert>
+
+    <update id="updateCinema" >
+        update cinema
+        <set>
+            cinema_name = #{cinemaName},
+            cinema_address = #{cinemaAddress}
+        </set>
+        where cinema_id = #{id}
+    </update>
+
+    <delete id="deleteCinema">
+		delete from cinema where cinema_id = #{id}
+    </delete>
+
+    <select id="selectMovieByCinemaId" parameterType="int" resultMap="CinemaMap">
+        select distinct cinema.* from hall,schedule,cinema
+        where hall.hall_id = schedule.hall_id and hall.cinema_id = cinema.cinema_id and schedule.movie_id = #{id}
+    </select>
+
+    
+</mapper>

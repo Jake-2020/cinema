@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cinema.demo.dao.ScheduleMapper">
+    <resultMap type="cinema.demo.entity.Schedule" id="ScheduleMap">
+        <id property="id" column="schedule_id" javaType="int"/>
+        <result property="hallId" column="hall_id" javaType="int"/>
+        <result property="movieId" column="movie_id" javaType="int"/>
+        <result property="schedulePrice" column="schedule_price" javaType="java.lang.Integer"/>
+        <result property="scheduleRemain" column="schedule_remain" javaType="java.lang.Integer"/>
+        <result property="scheduleStartTime" column="schedule_startTime" javaType="java.lang.String"/>
+        <result property="scheduleState" column="schedule_state" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <select id="selectScheduleById" parameterType="int" resultMap="ScheduleMap">
+        select * from schedule where schedule_id = #{id}
+    </select>
+
+    <select id="selectScheduleByState" parameterType="int" resultMap="ScheduleMap">
+		select * from schedule where schedule_state = #{scheduleState}
+    </select>
+
+    <update id="delScheduleRemain" parameterType="int">
+		update schedule set schedule_remain = schedule_remain - 1 where schedule_id = #{id}
+	</update>
+
+    <select id="selectScheduleByCinemaAndMovie" resultMap="ScheduleMap">
+		select schedule.* from schedule,hall where schedule.hall_id=hall.hall_id
+		 and hall.cinema_id = #{cinemaId} and movie_id = #{movieId} and schedule_state = 1
+	</select>
+
+    <select id="selectAllSchedule" resultMap="ScheduleMap">
+        select * from schedule
+    </select>
+
+
+    <select id="selectScheduleByMovieName" resultMap="ScheduleMap">
+		select schedule.* from schedule,movie
+		where schedule.movie_id = movie.movie_id and schedule.schedule_state = 1 and movie.movie_cn_name like '%${value}%'
+	</select>
+
+    <select id="selectOffScheduleByMovieName"  resultMap="ScheduleMap">
+		select schedule.* from schedule,movie
+		where schedule.movie_id = movie.movie_id and schedule.schedule_state = 0 and movie.movie_cn_name like '%${value}%'
+	</select>
+
+    <insert id="insertSchedule" parameterType="cinema.demo.entity.Schedule">
+		insert into schedule(hallId,movieId,schedulePrice,scheduleRemain,scheduleStartTime)
+		values(#{hall_id},#{movie_id},#{schedule_price},#{schedule_remain},#{schedule_startTime})
+	</insert>
+
+</mapper>

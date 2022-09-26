@@ -13,8 +13,9 @@ public class User {
     private Integer id;
     private String username;
     private String password;
+    private String email;       //邮箱
     private Integer type;      //类型  0为普通管理员  1为超级管理员
-    private String headUrl;    //头像url
-    private Date createTime;   //注册时间
-    private String salt;        //盐值
+    private String header;    //头像url
+    private String phone;      //手机
+    private byte[] avatar;
 }

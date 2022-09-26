@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cinema.demo.dao.MovieMapper">
+    <resultMap type="cinema.demo.entity.Movie" id="MovieMap">
+        <id property="id" column="movie_id" javaType="int"/>
+        <result property="movieActor" column="movie_actor" javaType="java.lang.String"/>
+        <result property="movieBoxOffice" column="movie_boxOffice" javaType="float"/>
+        <result property="movieCName" column="movie_cn_name" javaType="java.lang.String"/>
+        <result property="movieFName" column="movie_fg_name" javaType="java.lang.String"/>
+        <result property="movieCommentCount" column="movie_commentCount" javaType="int"/>
+        <result property="movieCountry" column="movie_country" javaType="java.lang.String"/>
+        <result property="movieDetail" column="movie_detail" javaType="java.lang.String"/>
+        <result property="movieDirector" column="movie_director" javaType="java.lang.String"/>
+        <result property="movieDuration" column="movie_duration" javaType="java.lang.String"/>
+        <result property="moviePicture" column="movie_picture" javaType="java.lang.String"/>
+        <result property="movieScore" column="movie_score" javaType="float"/>
+        <result property="movieType" column="movie_type" javaType="java.lang.String"/>
+        <result property="movieReleaseDate" column="movie_releaseDate" javaType="java.util.Date"/>
+        <result property="movieState" column="movie_state" javaType="int"/>
+    </resultMap>
+
+    <select id="selectMovieById"  parameterType="int" resultMap="MovieMap">
+        select * from movie where movie_id = #{id}
+    </select>
+
+    <select id="selectMovieByName" resultMap="MovieMap">
+        select from movie where movie_cn_name = #{name}
+    </select>
+
+    <insert id="insertMovie" parameterType="cinema.demo.entity.Movie">
+      		insert into movie(movie_cn_name,movie_fg_name,movie_actor,movie_director,movie_detail,movie_duration,movie_type,movie_score,movie_releaseDate,movie_country)
+		values(#{movieCName},#{movieFName},#{movieActor},#{movieDirector},#{movieDetail},#{movieDuration},#{movieType},#{movieScore},#{movieReleaseDate},#{movieCountry})
+    </insert>
+
+    <update id="deleceMovie">
+        update movie
+        <set>
+            movie_state = 0
+        </set>
+        where movie_id = #{id}
+    </update>
+
+    <update id="updateMovie">
+        update movie
+        <set>
+            movie_cn_name = #{movieCName},
+            movie_fg_name = #{movieFName},
+            movie_actor = #{movieActor},
+            movie_director = #{movieDirector},
+            movie_detail = #{movieDetail},
+            movie_duration = #{movieDuration},
+            movie_type = #{movieType},
+            movie_country = #{movieCountry}
+        </set>
+        where movie_id = #{id}
+    </update>
+
+    <select id="selectAllMovies" resultMap="MovieMap">
+        select * from movie
+        where movie_state = #{movieState}
+    </select>
+
+    <select id="selectMovieLikeName" resultMap="MovieMap">
+        select * from movie  where movie_cn_name like CONCAT('%',#{movieCName},'%') and movie_state = 1
+    </select>
+
+    <select id="selectMovieLikeType" resultMap="MovieMap">
+        select * from movie where movie_type like CONCAT('%',#{movieType},'%') and movie_state = 1
+    </select>
+
+    <select id="sortMovieByDate" resultMap="MovieMap">
+        select * from movie
+        where movie_state = 1 order by movie_releaseDate
+    </select>
+
+    <select id="sortMovieBycomentCount" resultMap="MovieMap">
+        select * from movie
+        where movie_state = 1 order by movie_commentCount DESC
+    </select>
+
+    <select id="selectMovieByBoxOffice" resultMap="MovieMap">
+        select * from movie
+        where movie_state = 1 order by movie_boxOffice DESC
+    </select>
+
+    <select id="selectMovieByScore" resultMap="MovieMap">
+        select * from movie
+        where movie_state = 1 order by movie_score DESC
+    </select>
+
+    <update id="addMovieCommentCount">
+        update movie set movie_commentCount = movie_commentCount + 1 where movie_id = #{id}
+    </update>
+
+    <update id="reduceMovieCommentCount">
+        update movie set movie_commentCount = movie_commentCount - 1 where movie_id = #{id}
+    </update>
+
+    <update id="changeMovieBoxOffice">
+        update movie set movie_boxOffice = movie_boxOffice + #{movieBoxOffice} where movie_id = #{id}
+    </update>
+
+    <update id="insertMoviePicture">
+        update movie set movie_picture = #{moviePicture} where movie_cn_name = #{name}
+    </update>
+
+    <update id="updateMoviePicture">
+        update movie set movie_picture = #{moviePicture} where movie_id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cinema.demo.dao.UserMapper">
+    <resultMap type="cinema.demo.entity.User" id="BaseResultMap">
+        <id property="id" column="user_id" javaType="int"/>
+        <result property="username" column="user_name" javaType="java.lang.String"/>
+        <result property="password" column="user_pwd" javaType="java.lang.String"/>
+        <result property="email" column="user_email" javaType="java.lang.String"/>
+        <result property="type" column="user_role" javaType="java.lang.Integer"/>
+        <result property="header" column="user_headImg" javaType="java.lang.String"/>
+        <result property="phone" column="user_phone" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="selectUserById" resultType="cinema.demo.entity.User" resultMap="BaseResultMap">
+        select user_name,user_pwd,user_email,user_headImg,user_phone
+        from user
+        where user_id = #{id}
+    </select>
+
+     <insert id="insertUser" parameterType="cinema.demo.entity.User" keyProperty="id">
+         insert into user (user_name,user_pwd,user_email)
+         values (#{username},#{password},#{email})
+     </insert>
+
+    <update id="updateUser">
+        update user
+        <set>
+                user_name = #{user.username},
+                user_pwd = #{user.password},
+                user_email = #{user.email},
+                user_phone = #{user.phone}
+        </set>
+        where user_id = #{id}
+    </update>
+
+    <select id="selectAllUser" resultType="cinema.demo.entity.User" resultMap="BaseResultMap">
+        select * from user
+    </select>
+
+    <select id="selectUserByName" resultType="cinema.demo.entity.User" resultMap="BaseResultMap">
+        select * from user where user_name = #{username}
+    </select>
+    
+    <select id="selectUserLikeName" resultType="cinema.demo.entity.User" resultMap="BaseResultMap">
+        select * from user where user_name like CONCAT('%',#{keyword},'%')
+    </select>
+
+    <update id="updateHeader">
+        update user set user_headImg = #{header} where user_id = #{id}
+    </update>
+</mapper>

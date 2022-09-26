@@ -1,17 +1,22 @@
 package cinema.demo.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cinema {
+public class LoginTicket {
     private Integer id;
-    private String cinemaName;  //影院名称
-    private String cinemaAddress;   //影院地址
+
+    private Integer userId;
+
+    private String ticket;
+
+    private Integer status;
+
+    private Date expired;
 }
